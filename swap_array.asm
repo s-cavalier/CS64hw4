@@ -193,9 +193,31 @@ doSwap:
         #    x+=2; 
         #    y+=2; 
         # }
+	# better version
+	# for (int* i = myArray; i < myArray + 11; i += 2) {
+	#	int x = *i;
+	#	int y = *(i + 1);
+	#	*i = y;
+	#	*(i + 1) = x;
+	#}
 
         # TODO: fill in the assembly code here:
+	la $t0, myArray # i
+	move $t1, $t0
+	addiu $t1, $t1, 44 # terminator; arr + 11 into t1
+loop:
+	slt $t2, $t0, $t1 # t2 = arr + i < arr + 11 == i < 11
+	beq $t2, $zero, finished
+	
+	addiu $t3, $t0, 4 # i + 1 -> t3
 
+	lw $t4, 0($t0)
+	lw $t5, 0($t3)
+	sw $t5, 0($t0)
+	sw $t4, 0($t3)
+
+	addiu $t0, 8
+	j loop
 
 finished:
         # do ___NOT___ remove this last line
